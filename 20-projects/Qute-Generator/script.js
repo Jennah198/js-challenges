@@ -1,3 +1,22 @@
+const quoteContainer = document.getElementById('quote-generator')
+const quoteText = document.getElementById('quote')
+const authorText = document.getElementById('author')
+const twitterBtn = document.getElementById('twitter')
+const newQuoteBtn = document.getElementById('new-quote')
+const loader = document.getElementById('loader')
+
+// show loading
+function loading() {
+  loader.hidden = false
+  quoteContainer.hidden = true
+}
+
+// hide loading
+function complete() {
+  loader.hidden = true
+  quoteContainer.hidden = false
+}
+
 // show new quote
 function newQuote() {
   //   loading()
