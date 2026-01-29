@@ -20,4 +20,13 @@ function newQuote() {
   //   complete()
 }
 
+// tweet quote
+function tweetQuote() {
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorText.textContent}`
+  window.open(tweetUrl, '_blank')
+}
+
+// event listners
+newQuoteBtn.addEventListener('click', newQuote)
+twitterBtn.addEventListener('click', tweetQuote)
 newQuote()
