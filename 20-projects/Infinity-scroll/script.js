@@ -6,7 +6,7 @@ let imagesLoaded = 0
 let totalImages = 0
 let photosArray = []
 // unsplash API
-const count = 30
+let count = 5
 const apiKey = 'FVF8lRGwREhsc45ZxCMOWZHk_DPCPNxr2rMad9kb9p0'
 const apiUrl = `https://api.unsplash.com/photos/random?client_id=${apiKey}&count=${count}`
 
@@ -16,7 +16,7 @@ function imageLoaded() {
   console.log('image loaded', imagesLoaded)
   if (imagesLoaded === totalImages) {
     ready = true
-    console.log('ready=', ready)
+    count = 30
   }
 }
 // helper function to set attributes on dom elements
