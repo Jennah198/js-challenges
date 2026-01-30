@@ -82,7 +82,7 @@ button:active {
 }
 
 /* HTML: <div class="loader"></div> */
-.loader {
+/* .loader {
   width: 50px;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -161,8 +161,8 @@ button:active {
       0% 100%
     );
   }
-}
-@keyframes l20-2 {
+} */
+/* @keyframes l20-2 {
   0% {
     transform: scaleY(1) rotate(0deg);
   }
@@ -175,7 +175,7 @@ button:active {
   100% {
     transform: scaleY(-1) rotate(-135deg);
   }
-}
+} */
 
 /* media query:tablets or smaller */
 @media screen and (max-width: 1000px) {
