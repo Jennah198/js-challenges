@@ -1,139 +1,162 @@
+// DOM Elements
 const button = document.getElementById('button')
 const audioElement = document.getElementById('audio')
 
+// =====================
 // VoiceRSS Javascript SDK
+// =====================
 const VoiceRSS = {
   speech: function (e) {
-    ;(this._validate(e), this._request(e))
+    this._validate(e)
+    this._request(e)
   },
+
   _validate: function (e) {
     if (!e) throw 'The settings are undefined'
     if (!e.key) throw 'The API key is undefined'
     if (!e.src) throw 'The text is undefined'
     if (!e.hl) throw 'The language is undefined'
-    if (e.c && 'auto' != e.c.toLowerCase()) {
-      var a = !1
+
+    if (e.c && e.c.toLowerCase() !== 'auto') {
+      let supported = false
+      const audio = new Audio()
+
       switch (e.c.toLowerCase()) {
         case 'mp3':
-          a = new Audio().canPlayType('audio/mpeg').replace('no', '')
+          supported = audio.canPlayType('audio/mpeg').replace('no', '')
           break
         case 'wav':
-          a = new Audio().canPlayType('audio/wav').replace('no', '')
+          supported = audio.canPlayType('audio/wav').replace('no', '')
           break
         case 'aac':
-          a = new Audio().canPlayType('audio/aac').replace('no', '')
+          supported = audio.canPlayType('audio/aac').replace('no', '')
           break
         case 'ogg':
-          a = new Audio().canPlayType('audio/ogg').replace('no', '')
+          supported = audio.canPlayType('audio/ogg').replace('no', '')
           break
         case 'caf':
-          a = new Audio().canPlayType('audio/x-caf').replace('no', '')
+          supported = audio.canPlayType('audio/x-caf').replace('no', '')
+          break
       }
-      if (!a) throw 'The browser does not support the audio codec ' + e.c
+
+      if (!supported)
+        throw 'The browser does not support the audio codec ' + e.c
     }
   },
+
   _request: function (e) {
-    var a = this._buildRequest(e),
-      t = this._getXHR()
-    ;((t.onreadystatechange = function () {
-      if (4 == t.readyState && 200 == t.status) {
-        if (0 == t.responseText.indexOf('ERROR')) throw t.responseText
-        ;((audioElement.src = t.responseText), audioElement.play())
+    const requestData = this._buildRequest(e)
+    const xhr = this._getXHR()
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        if (xhr.responseText.indexOf('ERROR') === 0) {
+          console.error(xhr.responseText)
+          return
+        }
+
+        audioElement.src = xhr.responseText
+        button.disabled = true
+
+        audioElement
+          .play()
+          .catch((err) => console.log('Audio play blocked:', err))
+
+        audioElement.onended = () => {
+          button.disabled = false
+        }
       }
-    }),
-      t.open('POST', 'https://api.voicerss.org/', !0),
-      t.setRequestHeader(
-        'Content-Type',
-        'application/x-www-form-urlencoded; charset=UTF-8',
-      ),
-      t.send(a))
+    }
+
+    xhr.open('POST', 'https://api.voicerss.org/', true)
+    xhr.setRequestHeader(
+      'Content-Type',
+      'application/x-www-form-urlencoded; charset=UTF-8',
+    )
+    xhr.send(requestData)
   },
+
   _buildRequest: function (e) {
-    var a = e.c && 'auto' != e.c.toLowerCase() ? e.c : this._detectCodec()
+    const codec =
+      e.c && e.c.toLowerCase() !== 'auto' ? e.c : this._detectCodec()
+
     return (
       'key=' +
-      (e.key || '') +
+      encodeURIComponent(e.key || '') +
       '&src=' +
-      (e.src || '') +
+      encodeURIComponent(e.src || '') +
       '&hl=' +
-      (e.hl || '') +
+      encodeURIComponent(e.hl || '') +
       '&r=' +
-      (e.r || '') +
+      encodeURIComponent(e.r || '') +
       '&c=' +
-      (a || '') +
+      encodeURIComponent(codec || '') +
       '&f=' +
-      (e.f || '') +
+      encodeURIComponent(e.f || '') +
       '&ssml=' +
-      (e.ssml || '') +
+      encodeURIComponent(e.ssml || '') +
       '&b64=true'
     )
   },
+
   _detectCodec: function () {
-    var e = new Audio()
-    return e.canPlayType('audio/mpeg').replace('no', '')
-      ? 'mp3'
-      : e.canPlayType('audio/wav').replace('no', '')
-        ? 'wav'
-        : e.canPlayType('audio/aac').replace('no', '')
-          ? 'aac'
-          : e.canPlayType('audio/ogg').replace('no', '')
-            ? 'ogg'
-            : e.canPlayType('audio/x-caf').replace('no', '')
-              ? 'caf'
-              : ''
+    const audio = new Audio()
+
+    if (audio.canPlayType('audio/mpeg').replace('no', '')) return 'mp3'
+    if (audio.canPlayType('audio/wav').replace('no', '')) return 'wav'
+    if (audio.canPlayType('audio/aac').replace('no', '')) return 'aac'
+    if (audio.canPlayType('audio/ogg').replace('no', '')) return 'ogg'
+    if (audio.canPlayType('audio/x-caf').replace('no', '')) return 'caf'
+
+    return ''
   },
+
   _getXHR: function () {
-    try {
-      return new XMLHttpRequest()
-    } catch (e) {}
-    try {
-      return new ActiveXObject('Msxml3.XMLHTTP')
-    } catch (e) {}
-    try {
-      return new ActiveXObject('Msxml2.XMLHTTP.6.0')
-    } catch (e) {}
-    try {
-      return new ActiveXObject('Msxml2.XMLHTTP.3.0')
-    } catch (e) {}
-    try {
-      return new ActiveXObject('Msxml2.XMLHTTP')
-    } catch (e) {}
-    try {
-      return new ActiveXObject('Microsoft.XMLHTTP')
-    } catch (e) {}
-    throw 'The browser does not support HTTP request'
+    return new XMLHttpRequest()
   },
 }
 
-// button.addEventListener('click', () => {
-//   VoiceRSS.speech({
-//     key: '7e2a16e0680a4cfeb5a79bab538665d8',
-//     src: 'Nezira Worku',
-//     hl: 'en-us',
-//     v: 'Linda',
-//     r: 0,
-//     c: 'mp3',
-//     f: '44khz_16bit_stereo',
-//     ssml: false,
-//   })
-// })
+// =====================
+// Tell joke using VoiceRSS
+// =====================
+function tellMe(joke) {
+  VoiceRSS.speech({
+    key: '7e2a16e0680a4cfeb5a79bab538665d8',
+    src: joke,
+    hl: 'en-us',
+    v: 'Linda',
+    r: 0,
+    c: 'mp3',
+    f: '44khz_16bit_stereo',
+    ssml: false,
+  })
+}
 
-// get jokes from joke api
+// =====================
+// Get joke from Joke API
+// =====================
 async function getJokes() {
-  let joke = ''
   const apiUrl =
     'https://v2.jokeapi.dev/joke/Programming,Dark,Spooky?blacklistFlags=nsfw,religious,political,racist,sexist,explicit'
+
   try {
     const response = await fetch(apiUrl)
     const data = await response.json()
+
+    let joke = ''
     if (data.setup) {
-      joke = `${data.setup}...${data.delivery}`
+      joke = `${data.setup} ... ${data.delivery}`
     } else {
       joke = data.joke
     }
-    console.log(joke)
+
+    tellMe(joke)
   } catch (error) {
-    // catch error here
-    console.log(error)
+    console.log('Joke API error:', error)
   }
 }
+
+// =====================
+// BUTTON EVENT LISTENER (CRITICAL)
+// =====================
+button.addEventListener('click', getJokes)
