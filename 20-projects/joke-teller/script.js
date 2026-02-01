@@ -105,15 +105,35 @@ const VoiceRSS = {
   },
 }
 
-button.addEventListener('click', () => {
-  VoiceRSS.speech({
-    key: '7e2a16e0680a4cfeb5a79bab538665d8',
-    src: 'Nezira Worku',
-    hl: 'en-us',
-    v: 'Linda',
-    r: 0,
-    c: 'mp3',
-    f: '44khz_16bit_stereo',
-    ssml: false,
-  })
-})
+// button.addEventListener('click', () => {
+//   VoiceRSS.speech({
+//     key: '7e2a16e0680a4cfeb5a79bab538665d8',
+//     src: 'Nezira Worku',
+//     hl: 'en-us',
+//     v: 'Linda',
+//     r: 0,
+//     c: 'mp3',
+//     f: '44khz_16bit_stereo',
+//     ssml: false,
+//   })
+// })
+
+// get jokes from joke api
+async function getJokes() {
+  let joke = ''
+  const apiUrl =
+    'https://v2.jokeapi.dev/joke/Programming,Dark,Spooky?blacklistFlags=nsfw,religious,political,racist,sexist,explicit'
+  try {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    if (data.setup) {
+      joke = `${data.setup}...${data.delivery}`
+    } else {
+      joke = data.joke
+    }
+    console.log(joke)
+  } catch (error) {
+    // catch error here
+    console.log(error)
+  }
+}
