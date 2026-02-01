@@ -1,8 +1,22 @@
+/* ROBOT.GIF from Giphy - https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2V1dXZmazk1aGo1bTJjOWhpYWZqd2hxaWJmb2Y2MzZvazFhaDFmOSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/zbzuZgxt23h8ywu7Bm/giphy.gif */
+
 html {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
+}
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: url('./Dance\ Party\ GIF\ by\ HeyAuto.gif');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
