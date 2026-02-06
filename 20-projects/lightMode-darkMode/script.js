@@ -66,5 +66,5 @@ if (currentTheme) {
 
 // i can use ternery operators to simplify code and avoide repetition too
 // function toggleDarkLightMode(isLight) {
-//   nav.style.backgroundColor = isLight? 'rgb(0 0 0/50%)' ||'rgb(255 255 255/50%)'
+//   nav.style.backgroundColor = isLight? 'rgb(0 0 0/50%)' :'rgb(255 255 255/50%)'
 // }
