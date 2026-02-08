@@ -9,6 +9,17 @@ const nav5 = document.getElementById('nav-5')
 function toggleNav() {
   // toggle: menu bars open/closed
   menuBars.classList.toggle('change')
+  //   toggle:menu active
+  overlay.classList.toggle('overlay-active')
+  if (overlay.classList.contains('overlay-active')) {
+    //animate in- overlay
+    overlay.classList.remove('overlay-slide-left')
+    overlay.classList.add('overlay-slide-right')
+  } else {
+    // animate out-overlay
+    overlay.classList.remove('overlay-slide-right')
+    overlay.classList.add('overlay-slide-left')
+  }
 }
 
 // event listeners
